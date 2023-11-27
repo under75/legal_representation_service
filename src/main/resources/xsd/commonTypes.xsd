@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:commonTypes="http://ffoms.ru/types/3.6/commonTypes" elementFormDefault="qualified" targetNamespace="http://ffoms.ru/types/3.6/commonTypes" version="1.0">
+
+    <complexType name="Attach">
+        <annotation>
+            <documentation>Информация о прикреплении</documentation>
+        </annotation>
+        <sequence>
+            <element name="areaType" type="string">
+                <annotation>
+                    <documentation>код типа участка - соответствует "ФРМО.
+                        Типы врачебных участков" OID 1.2.643.5.1.13.13.99.2.639
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="areaId" type="string">
+                <annotation>
+                    <documentation>Идентификатор участка прикрепления к МО</documentation>
+                </annotation>
+            </element>
+            <element name="attachMethod" type="string">
+                <annotation>
+                    <documentation>Способ прикрепления:
+                        1 - по месту регистрации
+                        2 - по личному заявлению
+                        3 - по электронному заявлению
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="dateAttachB" type="date">
+                <annotation>
+                    <documentation>Дата начала прикрепления</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="dateAttachE" type="date">
+                <annotation>
+                    <documentation>Дата окончания прикрепления</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="moId" type="string">
+                <annotation>
+                    <documentation>Идентификатор МО (OID)</documentation>
+                </annotation>
+            </element>
+            <element name="moCode" type="string">
+                <annotation>
+                    <documentation>6-ти значный код МО в реестре ОМС</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="moFId" type="string">
+                <annotation>
+                    <documentation>Идентификатор филиала МО (OID).
+                        Заполняется, если у МО есть филиал и к нему прикрепляется ЗЛ
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="snilsDoctor" type="commonTypes:SnilsType">
+                <annotation>
+                    <documentation>СНИЛС участкового врача</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="doctorId" type="string">
+                <annotation>
+                    <documentation>Идентификатор медработника, которому прикрепляется ЗЛ (OID).</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="doctorSince" type="date">
+                <annotation>
+                    <documentation>Фактическая дата прикрепления к врачу</documentation>
+                </annotation>
+            </element>
+            <element name="dsource" type="string">
+                <annotation>
+                    <documentation>Источник данных (какие именно ТФОМС, СМО и тд) В зависимости от типа - код территории ТФОМС, ОГРН СМО и т.п.</documentation>
+                </annotation>
+            </element>
+            <element name="dsourceType" type="string">
+                <annotation>
+                    <documentation>Вид источника данных (ТФОМС, СМО и т.п)</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="descr" type="string">
+                <annotation>
+                    <documentation>Описание</documentation>
+                </annotation>
+            </element>
+            <element name="moOkato" type="string">
+                <annotation>
+                    <documentation>ОКАТО территории медицинской организации, к которой происходит прикрепление</documentation>
+                </annotation>
+            </element>
+            <element name="attachStatus" type="string">
+                <annotation>
+                    <documentation>статус, напр: ДПП-действующий, НАП-недействующий</documentation>
+                </annotation>
+            </element>
+            <element name="depId" type="string">
+                <annotation>
+                    <documentation>Структурное подразделение МО</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="CommonResponseType">
+        <annotation>
+            <documentation>Результат запроса</documentation>
+        </annotation>
+        <sequence>
+            <element name="externalRequestId" type="commonTypes:ExternalRequestIdType">
+                <annotation>
+                    <documentation>Идентификатор запроса, присвоенный во внешний системе</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="errors" type="commonTypes:ListOfErrors">
+                <annotation>
+                    <documentation>ошибки</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <simpleType name="ExternalRequestIdType">
+        <annotation>
+            <documentation>Идентификатор запроса, присвоенный во внешний системе</documentation>
+        </annotation>
+            <restriction base="commonTypes:GUID"/>
+    </simpleType>
+
+    <simpleType name="LocalPersonIndex">
+        <annotation>
+            <documentation>Уникальный идентификатор персоны в рамках списка персон</documentation>
+        </annotation>
+            <restriction base="string">
+                <minLength value="1"/>
+                <maxLength value="255"/>
+            </restriction>
+    </simpleType>
+
+    <simpleType name="OpToken">
+        <annotation>
+            <documentation>Токен асинхронной операции, присвоенный внутри ЕРЗЛ</documentation>
+        </annotation>
+        <restriction base="string"/>
+    </simpleType>
+
+    <simpleType name="SnilsType">
+        <annotation>
+            <documentation>СНИЛС маска не учитывается, значимы только 11 цифр</documentation>
+        </annotation>
+        <restriction base="string"/>
+    </simpleType>
+
+    <simpleType name="Oip">
+        <annotation>
+            <documentation>Уникальный идентификатор персоны в ЕРЗЛ</documentation>
+        </annotation>
+        <restriction base="string">
+            <pattern value="\d{12}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="FIORussianLetters">
+        <annotation>
+            <documentation>ФИО</documentation>
+        </annotation>
+        <restriction base="string">
+            <pattern value="_?(([IVXLCMD]+([.][IVXLCMD]+)?[ ])?(([А-ЯЁ][а-яё]*(([ ]|( ?['`]|[.,] ?| ?[-] ?))[А-ЯЁа-яё]+)*[.]?)+)((( [А-ЯЁа-яё]+)+( [IVXLCMD]+([.][IVXLCMD]+)?)?)|(( [IVXLCMD]+([.][IVXLCMD]+)?)?(( [А-ЯЁа-яё]+)+)?)))+"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="ListOfErrors">
+        <sequence>
+            <element maxOccurs="unbounded" name="errorItem" type="commonTypes:ResponseErrorData"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="ResponseErrorData">
+        <annotation>
+            <documentation>код результата (http) и расшифровка ошибки</documentation>
+        </annotation>
+        <sequence>
+            <element name="code" type="string">
+                <annotation>
+                    <documentation>код ошибки</documentation>
+                </annotation>
+            </element>
+            <element name="message" type="string">
+                <annotation>
+                    <documentation>текст сообщения ошибки, препятствующие выполнению операции</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="tag" type="string">
+                <annotation>
+                    <documentation>Относительный путь к полю, на которое обнаружена ошибка</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="value" type="string">
+                <annotation>
+                    <documentation>Значение поля, на которое обнаружена ошибка</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="Contact">
+        <sequence>
+            <element name="contactType" type="string">
+                <annotation>
+                    <documentation>Тип контакта представителя застрахованного лица.
+                        Обязателен для заполнения, если заявление подается представителем застрахованного лица.
+                        Параметр может принимать одно из следующих значений (для одного контакта):
+                        ⦁ TEL - Телефон
+                        ⦁ MTEL - Мобильный телефон
+                        ⦁ EMAIL - Электронная почта
+                        ⦁ MAIL - Почта (Что имеется ввиду под просто почтой?)
+                        ⦁ STR - Строка текста
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="descr" type="string">
+                <annotation>
+                    <documentation>Описание контактов застрахованного лица в свободной форме</documentation>
+                </annotation>
+            </element>
+            <element name="contactText" type="string">
+                <annotation>
+                    <documentation>Содержимое контакта</documentation>
+                </annotation>
+            </element>
+            <element name="dsource" type="string">
+                <annotation>
+                    <documentation>источник данных</documentation>
+                </annotation>
+            </element>
+            <element name="dsourceType" type="string">
+                <annotation>
+                    <documentation>Вид источника данных</documentation>
+                </annotation>
+            </element>
+            <element name="contactStatus" type="string">
+                <annotation>
+                    <documentation>Статус</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="PersonDocIdentShortBase">
+        <sequence>
+            <element minOccurs="0" name="dudlSer" type="string">
+                <annotation>
+                    <documentation>
+                        Серия ДУДЛ законного представителя
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="dudlNum" type="string">
+                <annotation>
+                    <documentation>
+                        Номер ДУДЛ законного представителя
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="dudlDateB" type="date">
+                <annotation>
+                    <documentation>
+                        Дата начала действия (или дата выдачи) ДУДЛ законного представителя застрахованного лица. Формат
+                        даты: ГГГГ-ММ-ДД.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="dudlType" type="string">
+                <annotation>
+                    <documentation>
+                        Тип ДУДЛ законного представителя застрахованного лица. Заполняется путем выбора значений из
+                        справочника F011 "Классификатор типов документов, удостоверяющих личность (Tipdoc)".
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="surname" type="string">
+                <annotation>
+                    <documentation>
+                        Фамилия законного представителя застрахованного лица
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="patronymic" type="string">
+                <annotation>
+                    <documentation>
+                        Отчество законного представителя застрахованного лица
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="firstName" type="string">
+                <annotation>
+                    <documentation>
+                        Имя законного представителя застрахованного лица
+                    </documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="PersonDocIdentFullBase">
+        <annotation>
+            <documentation>Массив с документами, удостоверяющими личность.</documentation>
+        </annotation>
+        <complexContent>
+            <extension base="commonTypes:PersonDocIdentShortBase">
+                <sequence>
+                    <element minOccurs="0" name="dudlDateE" type="date">
+                        <annotation>
+                            <documentation>Дата окончания действия ДУДЛ (расчетная или фактическая для не действующего)
+                                Формат даты: ГГГГ-ММ-ДД.
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element minOccurs="0" name="issuer" type="string">
+                        <annotation>
+                            <documentation>Кем выдан</documentation>
+                        </annotation>
+                    </element>
+                    <element minOccurs="0" name="issuerOksm" type="string">
+                        <annotation>
+                            <documentation>Код страны выдачи</documentation>
+                        </annotation>
+                    </element>
+                    <element minOccurs="0" name="ctznOksm" type="string">
+                        <annotation>
+                            <documentation>Гражданство</documentation>
+                        </annotation>
+                    </element>
+                    <element minOccurs="0" name="descr" type="string">
+                        <annotation>
+                            <documentation>Описание</documentation>
+                        </annotation>
+                    </element>
+                    <element minOccurs="0" name="birthDay" type="date">
+                        <annotation>
+                            <documentation>дата рождения</documentation>
+                        </annotation>
+                    </element>
+                    <element minOccurs="0" name="birthplace" type="string">
+                        <annotation>
+                            <documentation>место рождения</documentation>
+                        </annotation>
+                    </element>
+                    <element minOccurs="0" name="birthOksm" type="string">
+                        <annotation>
+                            <documentation>страна рождения</documentation>
+                        </annotation>
+                    </element>
+                    <element minOccurs="0" name="dost" type="string">
+                        <annotation>
+                            <documentation>Коды надежности идентификации (в строке может быть несколько - без пробелов - напр., 15)</documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="PersonDocIdentSerNum">
+        <annotation>
+            <documentation>Данные, идентифицирующие ДУДЛ (достаточно указания типа документа и серии/номера).
+                Возможен ввод и поиск данных неактуального документа
+            </documentation>
+        </annotation>
+        <sequence>
+            <element minOccurs="0" name="dudlSer" type="string">
+                <annotation>
+                    <documentation>Серия ДУДЛ</documentation>
+                </annotation>
+            </element>
+            <element name="dudlNum" type="string">
+                <annotation>
+                    <documentation>Номер ДУДЛ</documentation>
+                </annotation>
+            </element>
+            <element name="dudlType" type="string">
+                <annotation>
+                    <documentation>Тип ДУДЛ</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="dudlDateB" type="date">
+                <annotation>
+                    <documentation>Дата начала действия (или дата выдачи) ДУДЛ.
+                        Формат даты: ГГГГ-ММ-ДД.
+                    </documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="Address">
+        <annotation>
+            <documentation>Массив с адресными данными застрахованного лица.</documentation>
+        </annotation>
+        <sequence>
+            <element minOccurs="0" name="okato" type="string">
+                <annotation>
+                    <documentation>В данном поле указывается код региона, района, города, села, населенного пункта
+                        из
+                        справочника O002 Общероссийский классификатор административно-территориального деления (OKATO).
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="oksm" type="string">
+                <annotation>
+                    <documentation>В данном поле указывается код страны из адреса. Данные заполняются из
+                        справочника O001 Общероссийский классификатор стран мира (OKSM).
+                        Если поле address_text пустое, то данное поле обязательно должно быть заполнено
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="aoguid" type="string">
+                <annotation>
+                    <documentation>Код ГАР с точностью до УЛИЦЫ.
+                        Если поле address_text пустое, то данное поле обязательно должно быть заполнено.
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="hsguid" type="string">
+                <annotation>
+                    <documentation>Код ГАР с точностью до дома.
+                        Если поле address_text пустое, то данное поле обязательно должно быть заполнено.
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="addressText" type="string">
+                <annotation>
+                    <documentation>Текстовое представление адреса (при отсутствии кодов ГАР)
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="mailIndex" type="string">
+                <annotation>
+                    <documentation>почтовый индекс (при отсутствии кодов ГАР и наличии текстового представления)</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="appNum" type="string">
+                <annotation>
+                    <documentation>Номер квартиры.
+                        Заполняется при заполненном поле hsguid, при наличии квартиры
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="dsourceType" type="string">
+                <annotation>
+                    <documentation>вид источника данных (ТФОМС, СМО и т.п.)</documentation>
+                </annotation>
+            </element>
+            <element name="dsource" type="string">
+                <annotation>
+                    <documentation>источник данных</documentation>
+                </annotation>
+            </element>
+            <element name="addressType" type="string">
+                <annotation>
+                    <documentation>Тип адреса. Нужен полный список типов адреса. Точно нужны:
+                        1 - Адрес регистрации по месту жительства
+                        2 - Адрес места пребывания
+                        Примечание: адрес места пребывания указывается в случае пребывания гражданина по адресу,
+                        отличному от адреса регистрации по месту жительства.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="addressDateB" type="date">
+                <annotation>
+                    <documentation>Дата начала действия адреса. По сути означает дату регистрации по данному адресу.
+                        Обязательна для адреса регистрации по месту жительства.
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="addressDateE" type="date">
+                <annotation>
+                    <documentation>Дата окончания действия адреса.
+                        По сути означает дату окончания действия регистрации по данному адресу.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="addressStatus" type="string">
+                <annotation>
+                    <documentation>Статус</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="OmsPolicy">
+        <annotation>
+            <documentation>Массив с данными полиса, созданного по итогам регистрации заявления.
+                Если полис не создавался, то в данном параметре вернется null
+            </documentation>
+        </annotation>
+        <sequence>
+            <element minOccurs="0" name="pcySer" type="string">
+                <annotation>
+                    <documentation>Серия полиса. Возвращается для полиса старого образца.</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="pcyNum" type="string">
+                <annotation>
+                    <documentation>Номер полиса. Возвращается для полиса старого образца.</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="enpCalc" type="string">
+                <annotation>
+                    <documentation>ЕНП расчетный. Единый номер полиса ОМС: 16 чисел без разделителей
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="enp" type="string">
+                <annotation>
+                    <documentation>ЕНП (нового образца)</documentation>
+                </annotation>
+            </element>
+            <element name="pcyDateB" type="date">
+                <annotation>
+                    <documentation>Дата начала действия полиса</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="pcyDateE" type="date">
+                <annotation>
+                    <documentation>Дата окончания действия полиса, расчетная или фактическая для не действующего
+                        (если есть).
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="pcyDateH" type="date">
+                <annotation>
+                    <documentation>Дата выдачи полиса на руки (если есть).</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="pcyDateT" type="date">
+                <annotation>
+                    <documentation>Дата обращения за полисом.</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="pcyDateEnpCalc" type="date">
+                <annotation>
+                    <documentation>Дата расчёта номера ЕНП.</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="pcyDatePr" type="date">
+                <annotation>
+                    <documentation>Дата изготовления полиса в Гознаке</documentation>
+                </annotation>
+            </element>
+            <element name="pcyType" type="string">
+                <annotation>
+                    <documentation>Тип полиса. Заполняется в соответствии с классификатором
+                        F008 Классификатор типов документов, подтверждающих факт страхования по ОМС (TipOMS)
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="pcyStatus" type="string">
+                <annotation>
+                    <documentation>Статус полиса. Возможны следующие значения:
+                        Действующий - статус означает, что данный полис действует и ЗЛ может получать по нему
+                        медицинскую помощь по ОМС
+                        Приостановленный - данный статус означает, что действие полиса временно приостановлено
+                        (например,
+                        для военнослужащих срочников на время службы). По полису с таким статусом нельзя получить
+                        медицинскую помощь по ОМС.
+                        Временный - данный статус означает, что полис ЗЛ выдан, но с идентификацией ЗЛ в Ф_ЕРЗЛ возникли
+                        проблемы
+                        и полис выдан на ограниченное время (45 дней). По полису с данным статусом ЗЛ может получить
+                        медицинскую помощь по ОМС.
+                        Но одновременно с этим ЗЛ уведомляется о том, что ему необходимо обратиться в
+                        соответствующую мастер-систему для актуализации персональных данных.
+                        Аннулированный - данный статус означает, что полис аннулирован (например, в связи со смертью ЗЛ,
+                        в связи с потерей гражданства, в связи со службой по контракту и т.д.)
+                        Не подтвержденный - данный статус означает, что ЗЛ выдавался временный полис в связи с
+                        проблемами идентификации ЗЛ в Ф_ЕРЗЛ и эти проблемы так и не были устранены за 45 дней.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="okato" type="string">
+                <annotation>
+                    <documentation>Код ОКАТО территории страхования</documentation>
+                </annotation>
+            </element>
+            <element name="dsource" type="string">
+                <annotation>
+                    <documentation>Источник данных (какие именно ТФОМС, СМО и тд) В зависимости от типа - код территории ТФОМС, ОГРН СМО и т.п.</documentation>
+                </annotation>
+            </element>
+            <element name="dsourceType" type="string">
+                <annotation>
+                    <documentation>Вид источника данных (ТФОМС, СМО и т.п)</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="descr" type="string">
+                <annotation>
+                    <documentation>Описание полиса в свободной форме</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="gender" type="commonTypes:GenderType"/>
+            <element minOccurs="0" name="insurName" type="string">
+                <annotation>
+                    <documentation>Официальная СМО, указанной в полисе ОМС</documentation>
+                </annotation>
+            </element>
+            <element name="insurfName" type="string">
+                <annotation>
+                    <documentation>Фактическая СМО</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="insurOgrn" type="string">
+                <annotation>
+                    <documentation>ОГРН официальной СМО, указанной в полисе ОМС</documentation>
+                </annotation>
+            </element>
+            <element name="insurfOgrn" type="string">
+                <annotation>
+                    <documentation>ОГРН фактической СМО</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="insurCode" type="string">
+                <annotation>
+                    <documentation>Код официальной СМО, указанной в полисе ОМС</documentation>
+                </annotation>
+            </element>
+            <element name="insurfCode" type="string">
+                <annotation>
+                    <documentation>ОГРН фактической СМО</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="insurfDate" type="date">
+                <annotation>
+                    <documentation>Дата начала работы с ЗЛ фактической СМО, не указанной в
+                        полисе ОМС ЗЛ (в случае прекращения работы официальной СМО)
+                    </documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="tmpcertNum" type="string">
+                <annotation>
+                    <documentation>номер временного свидетельства</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="tmpcertDateB" type="date">
+                <annotation>
+                    <documentation>Дата начала действия ВС</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="tmpcertDateE" type="date">
+                <annotation>
+                    <documentation>Дата окончания действия ВС</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="uekNum" type="string">
+                <annotation>
+                    <documentation>Номер универсальной электронной карты</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="pcyCategory" type="string">
+                <annotation>
+                    <documentation>Категория ЗЛ для получения полиса страхования</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="surname" type="string">
+                <annotation>
+                    <documentation>Фамилия</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="patronymic" type="string">
+                <annotation>
+                    <documentation>Отчество</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="firstName" type="string">
+                <annotation>
+                    <documentation>Имя</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="birthDay" type="date">
+                <annotation>
+                    <documentation>Дата рождения</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="blankNum" type="string">
+                <annotation>
+                    <documentation>номер бланка полиса</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="PcyData">
+        <annotation>
+            <documentation>Данные, идентифицирующие полис. Только для МО, СМО, ТФОМС.
+                Для корректной идентификации следует заполнить только поля, соответствующие типу полиса
+                Возможен ввод и поиск данных неактуального документа
+            </documentation>
+        </annotation>
+        <sequence>
+            <element minOccurs="0" name="pcyType">
+                <annotation>
+                    <documentation>Тип полиса страхования (если не указать,
+                        то следует указать ЕНП и поиск будет осуществляться как по ЕНП,
+                        так и по предвычисленному ЕНП)
+                    </documentation>
+                </annotation>
+                <simpleType>
+                    <restriction base="string">
+                        <pattern value="[СВЕПЭКХМЦ]"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element minOccurs="0" name="enp">
+                <annotation>
+                    <documentation>Единый номер полиса - ЕНП - (нового образца)</documentation>
+                </annotation>
+                <simpleType>
+                    <restriction base="string">
+                        <pattern value="\d{16}"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element minOccurs="0" name="pcySer" type="string">
+                <annotation>
+                    <documentation>Серия полиса (старого образца)</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="pcyNum" type="string">
+                <annotation>
+                    <documentation>Номер полиса (старого образца)</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="tmpcertNum" type="string">
+                <annotation>
+                    <documentation>Номер временного свидетельства</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="AsyncPollRequest">
+        <annotation>
+            <documentation>Запрос на получение статуса обработки ранее отправленного пакета</documentation>
+        </annotation>
+        <complexContent>
+            <extension base="commonTypes:CommonRequestType">
+                <sequence>
+                    <element name="opToken" type="commonTypes:OpToken"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="PaginationRequestType">
+        <sequence>
+            <element minOccurs="0" name="pageNumber" type="int"/>
+            <element minOccurs="0" name="itemPerPage" type="int"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="PaginationResponseType">
+        <sequence>
+            <element name="pageNumber" type="int"/>
+            <element name="itemPerPage" type="int"/>
+            <element name="count" type="long"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="CommonRequestType">
+        <sequence>
+            <element name="externalRequestId" type="commonTypes:ExternalRequestIdType"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="AsyncStartResponse">
+        <annotation>
+            <documentation>Стандартный ответ, на запрос запуска асинхронной операции</documentation>
+        </annotation>
+        <complexContent>
+            <extension base="commonTypes:CommonResponseType">
+                <sequence>
+                    <element minOccurs="0" name="opToken" type="commonTypes:OpToken"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="AsyncPollResponse">
+        <annotation>
+            <documentation>Стандартный ответ, на запрос статуса асинхронной операции</documentation>
+        </annotation>
+        <complexContent>
+            <extension base="commonTypes:AsyncStartResponse">
+                <sequence>
+                    <element name="processingStatus" type="string">
+                        <annotation>
+                            <documentation>Статус: готов, в обработке, ошибка</documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <simpleType name="GenderType">
+        <annotation>
+            <documentation>Половая принадлежность. Возможны следующие значения:
+                1 - мужской
+                2 - женский
+            </documentation>
+        </annotation>
+        <restriction base="integer">
+            <minInclusive value="1"/>
+            <maxInclusive value="2"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="StringListType">
+        <annotation>
+            <documentation>Список строковых значений</documentation>
+        </annotation>
+        <list itemType="string">
+        </list>
+    </simpleType>
+
+    <simpleType name="OkatoType">
+        <annotation>
+            <documentation>ОКАТО территории - обязательный для ТФОМС (причем обязан совпадать с территорией запросившего ТФОМС),
+                необязательный для ФФОМС/СМО
+            </documentation>
+        </annotation>
+            <restriction base="string">
+                <pattern value="\d{5}"/>
+            </restriction>
+    </simpleType>
+
+    <simpleType name="ExtendedOkatoType">
+        <annotation>
+            <documentation>Расширенный тип ОКАТО территории - обязательный для ТФОМС (причем обязан совпадать с территорией запросившего ТФОМС),
+                необязательный для ФФОМС/СМО
+            </documentation>
+        </annotation>
+        <restriction base="string">
+            <pattern value="\d{5}|\d{8}|\d{11}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="SmoCodeType">
+        <annotation>
+            <documentation>Код СМО в едином реестре ОМС</documentation>
+        </annotation>
+        <restriction base="string">
+            <pattern value="\d{5}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="GUID">
+        <restriction base="string">
+            <pattern value="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="ernType">
+        <annotation>
+            <documentation>собственно ЕРН</documentation>
+        </annotation>
+            <restriction base="string">
+                <pattern value="[0-9a-zA-Z]{12}"/>
+            </restriction>
+    </simpleType>
+
+</schema>

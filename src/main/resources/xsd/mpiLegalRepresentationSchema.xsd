@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:commonTypes="http://ffoms.ru/types/3.6/commonTypes" xmlns:tns="http://ffoms.ru/types/3.6/mpiLegalRepresentationSchema" elementFormDefault="qualified" targetNamespace="http://ffoms.ru/types/3.6/mpiLegalRepresentationSchema" version="1.0">
+    <import namespace="http://ffoms.ru/types/3.6/commonTypes" schemaLocation="commonTypes.xsd"/>
+
+    <!-- метод getLegalRepresentation-->
+
+    <element name="getLegalRepresentationRequest">
+        <annotation>
+            <documentation>Запрос на "Получение данных о законном представительстве"</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:CommonRequestType">
+                    <sequence>
+                        <element name="oip" type="commonTypes:Oip"/>
+                        <element minOccurs="0" name="legalRepType" type="tns:listOfLegRepType">
+                            <annotation>
+                                <documentation>
+                                    Признак возвращения информации для законных представителей:
+                                    1. parent
+                                    2 .child
+                                </documentation>
+                            </annotation>
+                        </element>
+                        <element name="isActual" type="boolean"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getLegalRepresentationResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на "Получение данных о законном представительстве"</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:CommonResponseType">
+                    <sequence>
+                        <element minOccurs="0" name="legalRepresentation" type="tns:ListOfLegalRepresentation"/>
+                        <element minOccurs="0" name="legalRepresentationBy" type="tns:ListOfLegalRepresentation"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+
+    <complexType name="ListOfLegalRepresentation">
+        <sequence>
+            <element maxOccurs="unbounded" minOccurs="0" name="legalRepresentationItem" nillable="true" type="tns:LegalRepresentation"/>
+        </sequence>
+    </complexType>
+
+
+    <complexType name="LegalRepresentation">
+        <annotation>
+            <documentation>Информация о законном представительстве</documentation>
+        </annotation>
+        <sequence>
+            <element name="oip" type="commonTypes:Oip"/>
+            <element name="legRepType" type="string">
+                <annotation>
+                    <documentation>Тип законного представительства</documentation>
+                </annotation>
+            </element>
+            <element name="legRepDateB" type="date">
+                <annotation>
+                    <documentation>Дата начала законного представительства</documentation>
+                </annotation>
+            </element>
+            <element minOccurs="0" name="legRepDateE" type="date">
+                <annotation>
+                    <documentation>Плановая дата окончания законного представительства</documentation>
+                </annotation>
+            </element>
+            <element name="status" type="string">
+                <annotation>
+                    <documentation>Статус законного представительства</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <simpleType name="listOfLegRepType">
+        <list>
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="1"/>
+                    <enumeration value="2"/>
+                </restriction>
+            </simpleType>
+        </list>
+    </simpleType>
+
+</schema>
